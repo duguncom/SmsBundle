@@ -14,12 +14,12 @@ class ProviderFactory
     /**
      * @var array
      */
-    private $config;
+    protected $config;
 
     /**
      * @var string
      */
-    private $environment;
+    protected $environment;
 
     public function __construct(array $config, $environment = BaseProviderClient::ENVIRONMENT_PRODUCTION)
     {

@@ -17,12 +17,12 @@ class Client extends BaseProviderClient
     /**
      * @var SendSingleTextualSms
      */
-    private $client;
+    protected $client;
 
     /**
      * @var SMSTextualRequest
      */
-    private $requestBody;
+    protected $requestBody;
 
     public function __construct(array $config)
     {
@@ -63,7 +63,7 @@ class Client extends BaseProviderClient
     public function send()
     {
         $response = $this->client->execute($this->requestBody);
-        
+
         return $response;
     }
 }

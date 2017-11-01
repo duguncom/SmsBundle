@@ -1,4 +1,7 @@
+parameters:
+    dugun_sms_factory_class: Dugun\Bundle\SmsBundle\Sms\ProviderFactory
+
 services:
     dugun_sms:
-        class: Dugun\Bundle\SmsBundle\Sms\ProviderFactory
+        class: '%dugun_sms_factory_class%'
         arguments: ['%dugun_sms%', '%kernel.environment%']
