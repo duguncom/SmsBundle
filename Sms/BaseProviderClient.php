@@ -2,45 +2,35 @@
 
 namespace Dugun\Bundle\SmsBundle\Sms;
 
+use Dugun\Bundle\SmsBundle\Exception\ProviderNotInstalledException;
+
 /**
  * Class BaseProviderClient.
  */
 abstract class BaseProviderClient implements ProviderClientInterface
 {
-    const ENVIRONMENT_PRODUCTION = 'prod';
-
     /**
-     * @var string
+     * @var bool
      */
-    private $environment = self::ENVIRONMENT_PRODUCTION;
+    protected $disabled = false;
 
-    /**
-     * @var mixed
-     */
-    private $debugNumber;
-
-    public function setEnvironment($environment)
+    public function disable()
     {
-        $this->environment = $environment;
+        $this->disabled = true;
     }
 
-    public function getEnvironment()
+    public function enable()
     {
-        return $this->environment;
-    }
-
-    public function setDebugNumber($number)
-    {
-        $this->debugNumber = $number;
-    }
-
-    public function getDebugNumber()
-    {
-        return $this->debugNumber;
+        $this->disabled = false;
     }
 
     protected function removeNewLines($string)
     {
         return trim(preg_replace('/\s+/', ' ', $string));
+    }
+
+    protected function createNotInstalledException(string $name, string $package)
+    {
+        throw new ProviderNotInstalledException(sprintf('%s is not installed. Run `composer require %s`', $name, $package));
     }
 }

@@ -7,7 +7,7 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
  * Class Configuration.
- * 
+ *
  * @author Farhad Safarov <farhad.safarov@gmail.com>
  */
 class Configuration implements ConfigurationInterface
@@ -22,19 +22,25 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
-                ->scalarNode('debug_number')
+                ->scalarNode('gateway_provider')
+                    ->validate()
+                        ->ifNotInArray(['infobip'])
+                        ->thenInvalid('It is not a supported SMS gateway provider')
+                    ->end()
                 ->end()
-                ->arrayNode('providers')
-                    ->prototype('array')
-                        ->children()
-                            ->scalarNode('username')
-                                ->isRequired()
-                                ->cannotBeEmpty()
-                            ->end()
-                            ->scalarNode('password')
-                                ->isRequired()
-                                ->cannotBeEmpty()
-                            ->end()
+                ->booleanNode('disable')
+                    ->defaultFalse()
+                ->end()
+                ->arrayNode('credentials')
+                    ->isRequired()
+                    ->children()
+                        ->scalarNode('username')
+                            ->isRequired()
+                            ->cannotBeEmpty()
+                        ->end()
+                        ->scalarNode('password')
+                            ->isRequired()
+                            ->cannotBeEmpty()
                         ->end()
                     ->end()
                 ->end()
