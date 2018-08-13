@@ -37,11 +37,7 @@ interface ProviderClientInterface
      */
     public function send();
 
-    public function setEnvironment($environment);
+    public function enable();
 
-    public function getEnvironment();
-
-    public function setDebugNumber($number);
-
-    public function getDebugNumber();
+    public function disable();
 }

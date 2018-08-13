@@ -3,8 +3,11 @@
   "description": "SMS bundle for dugun.com",
   "type": "symfony-bundle",
   "require": {
-    "symfony/framework-bundle": "^2.7|^3.0",
-    "infobip/infobip-api-php-client": "dev-master"
+    "symfony/framework-bundle": "^2.7|^3.0"
+  },
+  "suggest": {
+    "infobip/infobip-api-php-client": "If SMS gateway provider is going to be infobip",
+    "duguncom/mobily-sms-api": "If SMS gateway provider is going to be mobily"
   },
   "license": "MIT",
   "authors": [

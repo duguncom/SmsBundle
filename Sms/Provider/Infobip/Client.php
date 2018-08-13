@@ -24,9 +24,13 @@ class Client extends BaseProviderClient
      */
     protected $requestBody;
 
-    public function __construct(array $config)
+    public function __construct(array $credentials)
     {
-        $authConfiguration = new BasicAuthConfiguration($config['username'], $config['password']);
+        if (!class_exists('\infobip\api\configuration\BasicAuthConfiguration')) {
+            throw $this->createNotInstalledException('InfoBip', 'infobip/infobip-api-php-client');
+        }
+
+        $authConfiguration = new BasicAuthConfiguration($credentials['username'], $credentials['password']);
         $this->client = new SendSingleTextualSms($authConfiguration);
 
         $this->requestBody = new SMSTextualRequest();
@@ -41,7 +45,6 @@ class Client extends BaseProviderClient
 
     public function setTo($to)
     {
-        $to = $this->getEnvironment() == BaseProviderClient::ENVIRONMENT_PRODUCTION ? $to : $this->getDebugNumber();
         $this->requestBody->setTo($to);
 
         return $this;
@@ -62,6 +65,10 @@ class Client extends BaseProviderClient
 
     public function send()
     {
+        if ($this->disabled) {
+            return false;
+        }
+
         $response = $this->client->execute($this->requestBody);
 
         return $response;
