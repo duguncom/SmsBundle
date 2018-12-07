@@ -3,26 +3,23 @@
 namespace Dugun\Bundle\SmsBundle\Sms\Provider\Infobip;
 
 use Dugun\Bundle\SmsBundle\Sms\BaseProviderClient;
-use infobip\api\client\SendSingleTextualSms;
+use infobip\api\client\SendMultipleTextualSmsAdvanced;
 use infobip\api\configuration\BasicAuthConfiguration;
-use infobip\api\model\sms\mt\send\textual\SMSTextualRequest;
+use infobip\api\model\Destination;
+use infobip\api\model\sms\mt\send\Message;
+use infobip\api\model\sms\mt\send\textual\SMSAdvancedTextualRequest;
 
-/**
- * Class Client.
- *
- * @author Farhad Safarov <farhad.safarov@gmail.com>
- */
 class Client extends BaseProviderClient
 {
     /**
-     * @var SendSingleTextualSms
+     * @var SendMultipleTextualSmsAdvanced
      */
-    protected $client;
+    private $client;
 
     /**
-     * @var SMSTextualRequest
+     * @var Message
      */
-    protected $requestBody;
+    public $message;
 
     public function __construct(array $credentials)
     {
@@ -31,34 +28,29 @@ class Client extends BaseProviderClient
         }
 
         $authConfiguration = new BasicAuthConfiguration($credentials['username'], $credentials['password']);
-        $this->client = new SendSingleTextualSms($authConfiguration);
-
-        $this->requestBody = new SMSTextualRequest();
+        $this->client = new SendMultipleTextualSmsAdvanced($authConfiguration);
+        $this->message = new Message();
     }
 
     public function setFrom($from)
     {
-        $this->requestBody->setFrom($from);
+        $this->message->setFrom($from);
 
         return $this;
     }
 
     public function setTo($to)
     {
-        $this->requestBody->setTo($to);
+        $destination = new Destination();
+        $destination->setTo($to);
+        $this->message->setDestinations([$destination]);
 
         return $this;
     }
 
-    /**
-     * @param $text
-     *
-     * @return $this
-     */
     public function setText($text)
     {
-        $text = $this->removeNewLines($text);
-        $this->requestBody->setText($text);
+        $this->message->setText($this->removeNewLines($text));
 
         return $this;
     }
@@ -69,7 +61,10 @@ class Client extends BaseProviderClient
             return false;
         }
 
-        $response = $this->client->execute($this->requestBody);
+        $request = new SMSAdvancedTextualRequest();
+        $request->setMessages([$this->message]);
+
+        $response = $this->client->execute($request);
 
         return $response;
     }
