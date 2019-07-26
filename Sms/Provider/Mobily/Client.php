@@ -42,7 +42,7 @@ class Client extends BaseProviderClient
             return false;
         }
 
-        $sms = new \MobilyAPI\requests\sendSMS($this->client, [$this->to], $this->text);
+        $sms = new \MobilyAPI\requests\SendSMS($this->client, [$this->to], $this->text);
         $sms->send();
 
         return $sms->getResponse();
