@@ -4,11 +4,6 @@ namespace Dugun\Bundle\SmsBundle\Sms\Provider\Mobily;
 
 use Dugun\Bundle\SmsBundle\Sms\BaseProviderClient;
 
-/**
- * Class Client.
- *
- * @author Farhad Safarov <farhad.safarov@dugun.com>
- */
 class Client extends BaseProviderClient
 {
     private $client;
@@ -22,7 +17,9 @@ class Client extends BaseProviderClient
 
     public function setFrom($from)
     {
-        throw new \BadMethodCallException('Not implemented');
+        $this->client->paramDefaults['sender'] = $from;
+
+        return $this;
     }
 
     public function setTo($to)
